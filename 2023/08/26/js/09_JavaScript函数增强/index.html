@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="函数对象函数对象的属性在JavaScript中函数也是一个对象，对象中可以有属性和方法。 name属性：返回函数的名称 12function foo() &amp;#123;&amp;#125;console.log(foo.name); &#x2F;&#x2F; foo  length属性：用于返回函数参数的个数 12var baz &#x3D; (name, age, ...args) &#x3D;&gt; &amp;#123;&amp;#125;console.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript内存管理">
+<meta property="og:url" content="http://example.com/2023/08/26/js/09_JavaScript%E5%87%BD%E6%95%B0%E5%A2%9E%E5%BC%BA/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="函数对象函数对象的属性在JavaScript中函数也是一个对象，对象中可以有属性和方法。 name属性：返回函数的名称 12function foo() &amp;#123;&amp;#125;console.log(foo.name); &#x2F;&#x2F; foo  length属性：用于返回函数参数的个数 12var baz &#x3D; (name, age, ...args) &#x3D;&gt; &amp;#123;&amp;#125;console.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-08-26T07:12:00.000Z">
+<meta property="article:modified_time" content="2023-08-26T14:13:33.677Z">
+<meta property="article:author" content="学徒">
+<meta property="article:tag" content="函数高级">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/08/26/js/09_JavaScript%E5%87%BD%E6%95%B0%E5%A2%9E%E5%BC%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>JavaScript内存管理 | 学无止境</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">学无止境</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="fa fa-calendar fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/26/js/09_JavaScript%E5%87%BD%E6%95%B0%E5%A2%9E%E5%BC%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="学徒">
+      <meta itemprop="description" content="千里之行，始于足下">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学无止境">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript内存管理
+        </h1>
+
+        <div class="post-meta">
+
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-08-26 15:12:00 / 修改时间：22:13:33" itemprop="dateCreated datePublished" datetime="2023-08-26T15:12:00+08:00">2023-08-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">web前端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/js/" itemprop="url" rel="index"><span itemprop="name">js</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="函数对象"><a href="#函数对象" class="headerlink" title="函数对象"></a>函数对象</h1><h2 id="函数对象的属性"><a href="#函数对象的属性" class="headerlink" title="函数对象的属性"></a>函数对象的属性</h2><p>在JavaScript中函数也是一个对象，对象中可以有属性和方法。</p>
+<p>name属性：返回函数的名称</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(foo.<span class="property">name</span>); <span class="comment">// foo</span></span><br></pre></td></tr></table></figure>
+
+<p>length属性：用于返回函数参数的个数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title function_">baz</span> = (<span class="params">name, age, ...args</span>) =&gt; &#123;&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(baz.<span class="property">length</span>) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="arguments"><a href="#arguments" class="headerlink" title="arguments"></a>arguments</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>arguments是一个对应于传递给函数的参数的类数组（array-like）对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params">x, y, z</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">arguments</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>array-like表示不是数组类型，而是对象类型：</p>
+<ul>
+<li>它有数组的一些特性，如length，可以通过index索引来访问</li>
+<li>它没有数组的一些方法，比如filter、map等</li>
+</ul>
+<h3 id="arguments转Array"><a href="#arguments转Array" class="headerlink" title="arguments转Array"></a>arguments转Array</h3><p>常见转化方式：</p>
+<ul>
+<li>遍历arguments，添加到一个新数组中</li>
+<li>调用数组slice函数的call方法</li>
+<li>使用ES6中的方法：Array.from、[..arguments]</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方式一</span></span><br><span class="line"><span class="keyword">var</span> length = <span class="variable language_">arguments</span>.<span class="property">length</span>;</span><br><span class="line"><span class="keyword">var</span> arr = [];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">    arr.<span class="title function_">push</span>(<span class="variable language_">arguments</span>[i]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方式二</span></span><br><span class="line"><span class="keyword">var</span> arr1 = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>);</span><br><span class="line"><span class="keyword">var</span> arr2 = [].<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1, arr2);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方式三</span></span><br><span class="line"><span class="keyword">const</span> arr3 = <span class="title class_">Array</span>.<span class="title function_">from</span>(<span class="variable language_">arguments</span>);</span><br><span class="line"><span class="keyword">const</span> arr4 = [...<span class="variable language_">arguments</span>];</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr3, arr4);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>箭头函数不绑定arguments，所有在箭头函数中使用arguments会去上层作用域查找。</strong></p>
+<h3 id="函数的剩余参数"><a href="#函数的剩余参数" class="headerlink" title="函数的剩余参数"></a>函数的剩余参数</h3><p>ES6引入了剩余参数（rest parameter），可以将不定量的参数放入到一个数组中。</p>
+<p>如果最后一个参数是…为前缀的，那么它会将剩余的参数放到该参数前，并且作为一个数组。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params">m, n, ...args</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(m, n);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>剩余参数和arguments的区别：</p>
+<ul>
+<li>剩余参数只包含哪些没有对应形参的实参，而arguments对象包含了传给参数的所有实参</li>
+<li>arguments对象不是一个真正的数组，而rest参数是一个真正的数组</li>
+<li>arguments是早期的SCMAScript为了方便获取所有参数而提供的，而rest参数是ES6中提供以代替arguments的</li>
+<li>剩余参数必须放到最后一个位置，否则会报错</li>
+</ul>
+<h1 id="纯函数"><a href="#纯函数" class="headerlink" title="纯函数"></a>纯函数</h1><p>若一个函数符合以下条件，那么这个函数被称为纯函数</p>
+<ul>
+<li>此函数在相同的输入值时，需产生相同的输出</li>
+<li>函数的输出和输入值以外的其他隐藏信息或状态无关，也和由I&#x2F;O设备产生的外部输出无关</li>
+<li>该函数不能有语义上可观察的函数副作用，诸如“触发事件”，使输出设备输出，或更改输出值以外物件的内容等</li>
+</ul>
+<p>副作用：在执行一个函数时，除了返回函数值之外，还对调用函数产生了附加的影响，比如修改了全局变量、修改参数或者改变外部的存储。</p>
+<h1 id="柯里化"><a href="#柯里化" class="headerlink" title="柯里化"></a>柯里化</h1><p>柯里化（currying）是把接收多个参数的函数，变成接受一个单一参数的函数，并且返回接受余下的参数，而且返回结果的新函数的技术。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 未柯里化的函数</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">add</span>(<span class="params">x, y, z</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> x + y + z;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 柯里化处理</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params">x</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params">y</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params">z</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> x + y + z</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> result = <span class="title function_">foo</span>(<span class="number">10</span>)(<span class="number">20</span>)(<span class="number">30</span>)</span><br><span class="line">result = <span class="function"><span class="params">x</span> =&gt;</span> <span class="function"><span class="params">y</span> =&gt;</span> <span class="function"><span class="params">z</span> =&gt;</span> x + y + z</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>柯里化案例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title function_">logInfo</span> = data =&gt; <span class="function"><span class="params">type</span> =&gt;</span> <span class="function"><span class="params">message</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`时间：<span class="subst">$&#123;date&#125;</span> 类型：<span class="subst">$&#123;type&#125;</span> 内容：<span class="subst">$&#123;message&#125;</span>`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> logToday = <span class="title function_">logInfo</span>(<span class="string">&quot;2022-06-01&quot;</span>)</span><br><span class="line"><span class="keyword">var</span> logTodayDebug = <span class="title function_">logToday</span>(<span class="string">&quot;DEBUG&quot;</span>)</span><br><span class="line"><span class="keyword">var</span> logTodayFeature = <span class="title function_">logToday</span>(<span class="string">&quot;FEATURE&quot;</span>);</span><br><span class="line"><span class="title function_">logTodayDebug</span>(<span class="string">&quot;开始查询数据&quot;</span>)</span><br><span class="line"><span class="title function_">logTodayFeature</span>(<span class="string">&quot;开始解析数据&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>柯里化优势：</p>
+<ul>
+<li>函数的职责单一</li>
+<li>函数的参数复用</li>
+</ul>
+<p>自动柯里化函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">hyCurrying</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">curryFn</span>(<span class="params">...args</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (args.<span class="property">length</span> &gt;= fn.<span class="property">length</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params">...newArgs</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> curryFn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, args.<span class="title function_">concat</span>(newArgs))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> curryFn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="组合函数"><a href="#组合函数" class="headerlink" title="组合函数"></a>组合函数</h1><p>组合函数是将多个函数组合起来，自动依次调用。</p>
+<p>示例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">double</span>(<span class="params">num</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> num * <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">square</span>(<span class="params">num</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> num ** <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">compose</span>(<span class="params">fn1, fn2</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params">x</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">fn2</span>(<span class="title function_">fn1</span>(x));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> calcFn = <span class="title function_">compose</span>(double, square);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">calcFn</span>(<span class="number">20</span>));</span><br></pre></td></tr></table></figure>
+
+
+
+<p>传入多个参数的compose函数实现：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">composeFn</span>(<span class="params">...fns</span>) &#123;</span><br><span class="line">    <span class="comment">// 边界判断</span></span><br><span class="line">    <span class="keyword">if</span> (fns.<span class="property">length</span> &lt;= <span class="number">0</span>) <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> fn <span class="keyword">of</span> fns) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> fn !== <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;fn must be function&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params">...args</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> result = fns[<span class="number">0</span>].<span class="title function_">apply</span>(<span class="variable language_">this</span>, args)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; length; i++) &#123;</span><br><span class="line">            <span class="keyword">var</span> fn = fns[i]</span><br><span class="line">            result = fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, [result])</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="严格模式"><a href="#严格模式" class="headerlink" title="严格模式"></a>严格模式</h1><p>严格模式是一种具有限制性的JavaScript模式，从而使代码隐式地脱离了懒散模式。</p>
+<p>严格模式对正常的JavaScript语义进行了一些限制：</p>
+<ul>
+<li>严格模式通过抛出错误来消除一些原有的静默错误</li>
+<li>严格模式让JS引擎在执行代码时可以进行更多的优化（不需要对一些特殊的语法进行处理）</li>
+<li>严格模式禁用了在ECMAScript未来版本可能会定义的一些语法</li>
+</ul>
+<p>严格模式通过在文件或函数开头使用 use strict来开启</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 给整个script开启严格模式</span></span><br><span class="line"><span class="meta">&quot;use strict&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="string">&quot;use strict&quot;</span></span><br><span class="line">    m = <span class="string">&quot;foo&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+   
+     <div>
+       <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+     </div>
+   
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%87%BD%E6%95%B0%E9%AB%98%E7%BA%A7/" rel="tag"># 函数高级</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/" rel="prev" title="JavaScript原理">
+      <i class="fa fa-chevron-left"></i> JavaScript原理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/08/26/js/08_JavaScript%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="next" title="JavaScript内存管理">
+      JavaScript内存管理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81ODI4OS8zNDc1Mg=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.</span> <span class="nav-text">函数对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">函数对象的属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#arguments"><span class="nav-number">1.2.</span> <span class="nav-text">arguments</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arguments%E8%BD%ACArray"><span class="nav-number">1.2.2.</span> <span class="nav-text">arguments转Array</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E7%9A%84%E5%89%A9%E4%BD%99%E5%8F%82%E6%95%B0"><span class="nav-number">1.2.3.</span> <span class="nav-text">函数的剩余参数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%AF%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">纯函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%AF%E9%87%8C%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">柯里化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E5%87%BD%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">组合函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%A5%E6%A0%BC%E6%A8%A1%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">严格模式</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="学徒"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">学徒</p>
+  <div class="site-description" itemprop="description">千里之行，始于足下</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; Sun Mar 26 2023 08:00:00 GMT+0800 (中国标准时间) – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">学徒</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">172k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:36</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

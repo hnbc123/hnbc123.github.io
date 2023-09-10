@@ -33,8 +33,12 @@
 <meta property="og:image" content="http://example.com/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/HTML%E8%A7%A3%E6%9E%90.png">
 <meta property="og:image" content="http://example.com/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/CSS%E8%A7%A3%E6%9E%90.png">
 <meta property="og:image" content="http://example.com/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/%E6%B8%B2%E6%9F%93%E6%A0%91.png">
+<meta property="og:image" content="http://example.com/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/V8%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://example.com/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/%E5%85%A8%E5%B1%80%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E5%89%8D.png">
+<meta property="og:image" content="http://example.com/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/%E5%85%A8%E5%B1%80%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E5%90%8E.png">
+<meta property="og:image" content="http://example.com/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/%E5%87%BD%E6%95%B0%E6%89%A7%E8%A1%8C%E5%89%8D.png">
 <meta property="article:published_time" content="2023-06-23T01:04:00.000Z">
-<meta property="article:modified_time" content="2023-06-23T01:51:01.031Z">
+<meta property="article:modified_time" content="2023-07-29T01:18:30.997Z">
 <meta property="article:author" content="学徒">
 <meta property="article:tag" content="浏览器渲染原理">
 <meta property="article:tag" content="js运行原理">
@@ -202,10 +206,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-06-23 09:04:00 / 修改时间：09:51:01" itemprop="dateCreated datePublished" datetime="2023-06-23T09:04:00+08:00">2023-06-23</time>
+              <time title="创建时间：2023-06-23 09:04:00" itemprop="dateCreated datePublished" datetime="2023-06-23T09:04:00+08:00">2023-06-23</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-07-29 09:18:30" itemprop="dateModified" datetime="2023-07-29T09:18:30+08:00">2023-07-29</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -233,14 +243,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
+              <span>3.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -330,6 +340,73 @@
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">&quot;./js/async.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
+
+
+
+
+
+<h1 id="V8引擎"><a href="#V8引擎" class="headerlink" title="V8引擎"></a>V8引擎</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>V8是用C++编写的Google开源高性能JavaScript和WebAssembly引擎，它用于Chrome和Node.js等。</p>
+<p>V8可以独立运行，也可以嵌入到任何C++应用程序中。</p>
+<p><img src="/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/V8%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B.png"></p>
+<h2 id="V8引擎的架构"><a href="#V8引擎的架构" class="headerlink" title="V8引擎的架构"></a>V8引擎的架构</h2><ul>
+<li>Parse模块会将JS代码转为AST（抽象语法树），因为解释器不能直接解析JS代码。如果函数没有被调用，那就不会转为AST</li>
+<li>Ignition是解释器，将AST转为ByteCode（字节码），同时收集TurboFan优化所需要的信息，如函数参数的类型信息，有类型才能进行真实的运算。如果函数只调用一次，Ignition会解释执行ByteCode</li>
+<li>TurboFan是一个编译器，可以将字节码编译为CPU可以直接执行的机器码。如果一个被多次调用，就会被标记为热点函数，那么就会经过TurboFan转换成优化的机器码，提高代码的执行性能。机器码实际上也会被还原为ByteCode，因为如果后续执行函数的过程中，类型发生了变化，之前优化的机器码并不能正确地处理运算，就会逆向地转换成字节码</li>
+</ul>
+<h1 id="JavaScript执行原理"><a href="#JavaScript执行原理" class="headerlink" title="JavaScript执行原理"></a>JavaScript执行原理</h1><h2 id="初始化全局对象"><a href="#初始化全局对象" class="headerlink" title="初始化全局对象"></a>初始化全局对象</h2><p>js引擎在执行代码之前，会在堆内存中创建一个全局对象：Global Object（GO）</p>
+<ul>
+<li>该对象所有的作用域都可以访问</li>
+<li>里面会包含Data、Array、String、Number、setTimeout、setInterval等</li>
+<li>其中有一个window属性指向自己</li>
+</ul>
+<h2 id="执行上下文"><a href="#执行上下文" class="headerlink" title="执行上下文"></a>执行上下文</h2><p>js引擎内部有一个执行上下文栈（Execution Context Stack，简称ECS），用于执行代码的调用栈。</p>
+<p>它执行的是全局的代码块：</p>
+<ul>
+<li>全局的代码块为了执行会构建一个全局执行上下文（GEC）</li>
+<li>GEC（Global Execution Context）会放入到ECS中执行</li>
+</ul>
+<p>GEC放入到ECS中的内容包含两部分：</p>
+<ul>
+<li>在代码执行器，在parser转成AST的过程中，会将全局定义的变量、函数等加入到GlobalObject中，但是并不会赋值，这个过程称为变量的作用域提升</li>
+<li>在代码执行中，对变量赋值，或执行其他的函数</li>
+</ul>
+<p>每个执行上下文会关联一个VO（Variable Object），变量和函数声明会被添加到这个VO对象中。</p>
+<p>当全局代码被执行时，VO就是GO对象了。</p>
+<h2 id="全局代码执行过程"><a href="#全局代码执行过程" class="headerlink" title="全局代码执行过程"></a>全局代码执行过程</h2><p>全局代码执行前：</p>
+<p><img src="/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/%E5%85%A8%E5%B1%80%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E5%89%8D.png"></p>
+<p>全局代码执行后：</p>
+<p><img src="/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/%E5%85%A8%E5%B1%80%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E5%90%8E.png"></p>
+<h2 id="函数执行过程"><a href="#函数执行过程" class="headerlink" title="函数执行过程"></a>函数执行过程</h2><p>在执行的过程中执行到一个函数时，会根据函数体创建一个函数执行上下文（Functional Execution Context，简称FEC），并且压入EC Stack中。</p>
+<p>每个执行上下文都会关联一个VO，函数执行上下文关联的VO称为AO（Activation Object）。</p>
+<p>当进入一个函数执行上下文时，会创建一个AO对象，这个AO对象会使用arguments作为初始化，并且初始值时传入的参数，这个AO对象会作为执行上下文的VO来存放变量的初始化。</p>
+<p>函数执行过程：</p>
+<p><img src="/2023/06/23/js/07_JavaScript%E5%8E%9F%E7%90%86/%E5%87%BD%E6%95%B0%E6%89%A7%E8%A1%8C%E5%89%8D.png"></p>
+<h2 id="作用域和作用域链"><a href="#作用域和作用域链" class="headerlink" title="作用域和作用域链"></a>作用域和作用域链</h2><p>当进行入到一个执行上下文时，执行上下文会关联一个作用域链（Scope Chain）。</p>
+<p>作用域链是一个对象列表，用于变量标识符的求值。当进入一个执行上下文时，这个作用域链被创建，并且根据代码类型，添加一系列的对象。</p>
+<p>作用域链在函数定义的时候已经确定，与调用的位置无关。</p>
+<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><h2 id="认识内存管理"><a href="#认识内存管理" class="headerlink" title="认识内存管理"></a>认识内存管理</h2><p>代码执行过程中需要分配内存，不管以什么样的方式来管理内存，内存的管理都会有如下生命周期：</p>
+<ul>
+<li>申请分配需要的内存</li>
+<li>使用分配的内存</li>
+<li>不需要使用时，对其进行释放</li>
+</ul>
+<p>JS对于原始数据类型内存的分配会在执行时，直接在栈空间进行分配；</p>
+<p>JS对于复杂数据类型内存的分配会在堆内存中开辟一块空间，并且将这块空间的指针返回值变量引用。</p>
+<h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><p>因为内存的大小是有限的，当内存不再需要的时候，需要对其进行释放，以腾出更多的内存空间。</p>
+<p>垃圾回收（Garbage Collection，简称GC），常见算法：</p>
+<ul>
+<li>引用计数：当一个对象有一个引用指向它时，这个对象的引用+1；当对象引用为0时就可以被销毁。弊端是循环引用的情况下无法回收</li>
+<li>标记清除：使用可达性分析算法，设置一个根对象，垃圾回收器定期从这个根开始，找所有从根开始有引用到的对象，对于没有引用到的对象就认为是不可用的对象</li>
+<li>标记整理：和标记-清除类似，不同的是，回收期间同时会将保留的存储对象搬运汇集到连续的内存空间，从而整合空闲空间，避免内存碎片化</li>
+<li>分代收集：对象分为新的和旧的两组，长期存活的对象，即旧的组被检查的频率降低</li>
+<li>增量收集：将垃圾收集工作分成几部分来做，然后将这几部分逐一处理，以避免大的延迟</li>
+<li>闲时收集：只在CPU空闲时尝试运行</li>
+</ul>
+<h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><h2 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h2><p>闭包在实现上是一个结构体，它存储了一个函数和一个关联的环境。闭包跟函数最大的区别在于捕捉闭包的时候，它的自由变量会在捕捉时被确定，这样即使脱离了捕捉时的上下文，它也能照常运行。</p>
+<p>一个函数和对其周围状态的引用捆绑在一起，这样的组合就是闭包。</p>
+<p>从广义的角度，JS中的函数都是闭包；</p>
+<p>从狭义的角度，JS中的函数，如果访问了外层作用域的变量，那么它是一个闭包</p>
+
     </div>
 
     
@@ -361,7 +438,10 @@
     <a href="/2023/05/20/js/05_JavaScript%E7%9A%84BOM%E6%93%8D%E4%BD%9C/" rel="prev" title="JavaScript的DOM操作">
       <i class="fa fa-chevron-left"></i> JavaScript的DOM操作
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/08/26/js/09_JavaScript%E5%87%BD%E6%95%B0%E5%A2%9E%E5%BC%BA/" rel="next" title="JavaScript内存管理">
+      JavaScript内存管理 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -425,7 +505,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">浏览器渲染原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%86%85%E6%A0%B8"><span class="nav-number">1.1.</span> <span class="nav-text">浏览器内核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">渲染流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">解析过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML%E8%A7%A3%E6%9E%90"><span class="nav-number">1.2.2.</span> <span class="nav-text">HTML解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90CSS%E8%A7%84%E5%88%99"><span class="nav-number">1.2.3.</span> <span class="nav-text">生成CSS规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E6%B8%B2%E6%9F%93%E6%A0%91"><span class="nav-number">1.2.4.</span> <span class="nav-text">构建渲染树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E5%B1%80%E5%92%8C%E7%BB%98%E5%88%B6"><span class="nav-number">1.2.5.</span> <span class="nav-text">布局和绘制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9E%E6%B5%81%E5%92%8C%E9%87%8D%E7%BB%98"><span class="nav-number">1.3.</span> <span class="nav-text">回流和重绘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E6%B5%81"><span class="nav-number">1.3.1.</span> <span class="nav-text">回流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E7%BB%98"><span class="nav-number">1.3.2.</span> <span class="nav-text">重绘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#composite%E5%90%88%E6%88%90"><span class="nav-number">1.4.</span> <span class="nav-text">composite合成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#script%E5%85%83%E7%B4%A0%E5%92%8C%E9%A1%B5%E9%9D%A2%E8%A7%A3%E6%9E%90"><span class="nav-number">1.5.</span> <span class="nav-text">script元素和页面解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#script%E8%A7%A3%E6%9E%90%E9%97%AE%E9%A2%98"><span class="nav-number">1.5.1.</span> <span class="nav-text">script解析问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#defer"><span class="nav-number">1.5.2.</span> <span class="nav-text">defer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#async"><span class="nav-number">1.5.3.</span> <span class="nav-text">async</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">浏览器渲染原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%86%85%E6%A0%B8"><span class="nav-number">1.1.</span> <span class="nav-text">浏览器内核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">渲染流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">解析过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML%E8%A7%A3%E6%9E%90"><span class="nav-number">1.2.2.</span> <span class="nav-text">HTML解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90CSS%E8%A7%84%E5%88%99"><span class="nav-number">1.2.3.</span> <span class="nav-text">生成CSS规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E6%B8%B2%E6%9F%93%E6%A0%91"><span class="nav-number">1.2.4.</span> <span class="nav-text">构建渲染树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E5%B1%80%E5%92%8C%E7%BB%98%E5%88%B6"><span class="nav-number">1.2.5.</span> <span class="nav-text">布局和绘制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9E%E6%B5%81%E5%92%8C%E9%87%8D%E7%BB%98"><span class="nav-number">1.3.</span> <span class="nav-text">回流和重绘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E6%B5%81"><span class="nav-number">1.3.1.</span> <span class="nav-text">回流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E7%BB%98"><span class="nav-number">1.3.2.</span> <span class="nav-text">重绘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#composite%E5%90%88%E6%88%90"><span class="nav-number">1.4.</span> <span class="nav-text">composite合成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#script%E5%85%83%E7%B4%A0%E5%92%8C%E9%A1%B5%E9%9D%A2%E8%A7%A3%E6%9E%90"><span class="nav-number">1.5.</span> <span class="nav-text">script元素和页面解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#script%E8%A7%A3%E6%9E%90%E9%97%AE%E9%A2%98"><span class="nav-number">1.5.1.</span> <span class="nav-text">script解析问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#defer"><span class="nav-number">1.5.2.</span> <span class="nav-text">defer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#async"><span class="nav-number">1.5.3.</span> <span class="nav-text">async</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#V8%E5%BC%95%E6%93%8E"><span class="nav-number">2.</span> <span class="nav-text">V8引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#V8%E5%BC%95%E6%93%8E%E7%9A%84%E6%9E%B6%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">V8引擎的架构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JavaScript%E6%89%A7%E8%A1%8C%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">JavaScript执行原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%85%A8%E5%B1%80%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.1.</span> <span class="nav-text">初始化全局对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">3.2.</span> <span class="nav-text">执行上下文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">3.3.</span> <span class="nav-text">全局代码执行过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">3.4.</span> <span class="nav-text">函数执行过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE"><span class="nav-number">3.5.</span> <span class="nav-text">作用域和作用域链</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A4%E8%AF%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">4.1.</span> <span class="nav-text">认识内存管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="nav-number">4.2.</span> <span class="nav-text">垃圾回收</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85"><span class="nav-number">5.</span> <span class="nav-text">闭包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">5.1.</span> <span class="nav-text">定义</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -441,7 +521,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -454,7 +534,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -490,12 +570,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">138k</span>
+    <span title="站点总字数">172k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:05</span>
+    <span title="站点阅读时长">2:36</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
