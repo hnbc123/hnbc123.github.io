@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="AJAX发送请求XHR基本使用完成AJAX请求步骤：  创建网络请求的AJAX对象（使用XMLHttpRequest） 监听XMLHttpRequest对象状态的变化，或者监听onload事件 配置网络请求（通过open方法） 发送网络请求  1234567891011&#x2F;&#x2F; 创建 XMLHttpRequest对象const xhr &#x3D; new XMLHttpRequest();&#x2F;&#x2F; 监听对象状态的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络编程">
+<meta property="og:url" content="http://example.com/2023/09/30/js/18_JavaScript%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="AJAX发送请求XHR基本使用完成AJAX请求步骤：  创建网络请求的AJAX对象（使用XMLHttpRequest） 监听XMLHttpRequest对象状态的变化，或者监听onload事件 配置网络请求（通过open方法） 发送网络请求  1234567891011&#x2F;&#x2F; 创建 XMLHttpRequest对象const xhr &#x3D; new XMLHttpRequest();&#x2F;&#x2F; 监听对象状态的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-30T07:12:00.000Z">
+<meta property="article:modified_time" content="2023-10-01T07:45:19.248Z">
+<meta property="article:author" content="学徒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/09/30/js/18_JavaScript%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>网络编程 | 学无止境</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">学无止境</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="fa fa-calendar fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/30/js/18_JavaScript%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="学徒">
+      <meta itemprop="description" content="千里之行，始于足下">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学无止境">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网络编程
+        </h1>
+
+        <div class="post-meta">
+
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-30 15:12:00" itemprop="dateCreated datePublished" datetime="2023-09-30T15:12:00+08:00">2023-09-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-01 15:45:19" itemprop="dateModified" datetime="2023-10-01T15:45:19+08:00">2023-10-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">web前端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/js/" itemprop="url" rel="index"><span itemprop="name">js</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="AJAX发送请求"><a href="#AJAX发送请求" class="headerlink" title="AJAX发送请求"></a>AJAX发送请求</h1><h2 id="XHR基本使用"><a href="#XHR基本使用" class="headerlink" title="XHR基本使用"></a>XHR基本使用</h2><p>完成AJAX请求步骤：</p>
+<ul>
+<li>创建网络请求的AJAX对象（使用XMLHttpRequest）</li>
+<li>监听XMLHttpRequest对象状态的变化，或者监听onload事件</li>
+<li>配置网络请求（通过open方法）</li>
+<li>发送网络请求</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 XMLHttpRequest对象</span></span><br><span class="line"><span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line"><span class="comment">// 监听对象状态的改变</span></span><br><span class="line">xhr.<span class="property">onreadystatechange</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;状态发生了改变&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 配置请求的方式</span></span><br><span class="line"><span class="comment">// 可将open的第三个参数设为false以发送同步请求</span></span><br><span class="line">xhr.<span class="title function_">open</span>(<span class="string">&quot;get&quot;</span>, <span class="string">&quot;http://localhost:8080/hello&quot;</span>);</span><br><span class="line"><span class="comment">// 发送请求</span></span><br><span class="line">xhr.<span class="title function_">send</span>();</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="XMLHttpRequest的状态"><a href="#XMLHttpRequest的状态" class="headerlink" title="XMLHttpRequest的状态"></a>XMLHttpRequest的状态</h2><p>在一次网络请求中包含如下状态：</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>状态</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>UNSENT</td>
+<td>代理被创建，但尚未调用open()方法</td>
+</tr>
+<tr>
+<td>1</td>
+<td>OPENED</td>
+<td>open()方法已经被调用</td>
+</tr>
+<tr>
+<td>2</td>
+<td>HEADERS_RECEIVED</td>
+<td>send()方法已经被调用，并且头部和状态已经可获得</td>
+</tr>
+<tr>
+<td>3</td>
+<td>LOADING</td>
+<td>下载中，responseText属性已经包含部分数据</td>
+</tr>
+<tr>
+<td>4</td>
+<td>DONE</td>
+<td>下载操作完成</td>
+</tr>
+</tbody></table>
+<p>其他状态：</p>
+<ul>
+<li>loadstart：请求开始。</li>
+<li>progress： 一个响应数据包到达，此时整个 response body 都在 response 中。</li>
+<li>abort：调用 xhr.abort() 取消了请求。</li>
+<li>error：发生连接错误，例如，域错误。不会发生诸如 404 这类的 HTTP 错误。</li>
+<li>load：请求成功完成。</li>
+<li>timeout：由于请求超时而取消了该请求（仅发生在设置了 timeout 的情况下）。</li>
+<li>loadend：在 load，error，timeout 或 abort 之后触发。</li>
+</ul>
+<p>可以是使用load来获取数据：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xhr.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(xhr.<span class="property">response</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以用timeout设置超时时间，也可以通过abort方法强制取消请求。</p>
+<h2 id="响应数据和响应类型"><a href="#响应数据和响应类型" class="headerlink" title="响应数据和响应类型"></a>响应数据和响应类型</h2><p>XMLHttpRequest的reponse属性返回响应的正文内容，返回的类型取决于reponseType的属性设置。</p>
+<p>通过reponseType可以设置获取数据的类型，如果设置为空字符串，会使用text作为默认值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(xhr.<span class="property">response</span>);</span><br><span class="line">&#125;</span><br><span class="line">xhr.<span class="property">responseType</span> = <span class="string">&quot;json&quot;</span>;</span><br><span class="line">xhr.<span class="title function_">open</span>(<span class="string">&quot;get&quot;</span>, <span class="string">&quot;http://localhost:8080/hello&quot;</span>);</span><br><span class="line">xhr.<span class="title function_">send</span>();</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="GET-x2F-POST请求传递参数"><a href="#GET-x2F-POST请求传递参数" class="headerlink" title="GET&#x2F;POST请求传递参数"></a>GET&#x2F;POST请求传递参数</h2><p>常见的传递给服务器数据的方式有：</p>
+<ul>
+<li>GET请求的query参数</li>
+<li>POST请求x-www-form-urlencoded格式</li>
+<li>POST请求FormData格式</li>
+<li>POST请求JSON格式</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> formEl = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.info&quot;</span>)</span><br><span class="line"><span class="keyword">const</span> sendBtn = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.send&quot;</span>)</span><br><span class="line">sendBtn.<span class="property">onclick</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 创建xhr对象</span></span><br><span class="line">    <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 监听数据响应</span></span><br><span class="line">    xhr.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(xhr.<span class="property">response</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 配置请求</span></span><br><span class="line">    xhr.<span class="property">responseType</span> = <span class="string">&quot;json&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1.传递参数方式一: get -&gt; query</span></span><br><span class="line">    xhr.<span class="title function_">open</span>(<span class="string">&quot;get&quot;</span>, <span class="string">&quot;http://localhost:8080/get?name=lucy&amp;age=18&amp;address=广州市&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2.传递参数方式二: post -&gt; urlencoded</span></span><br><span class="line">    xhr.<span class="title function_">open</span>(<span class="string">&quot;post&quot;</span>, <span class="string">&quot;http://localhost:8080/posturl&quot;</span>)</span><br><span class="line">    <span class="comment">// 发送请求(请求体body)</span></span><br><span class="line">    xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&quot;Content-type&quot;</span>, <span class="string">&quot;application/x-www-form-urlencoded&quot;</span>)</span><br><span class="line">    xhr.<span class="title function_">send</span>(<span class="string">&quot;name=lucy&amp;age=18&amp;address=广州市&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3.传递参数方式三: post -&gt; formdata</span></span><br><span class="line">    xhr.<span class="title function_">open</span>(<span class="string">&quot;post&quot;</span>, <span class="string">&quot;http://localhost:8080/postform&quot;</span>)</span><br><span class="line">    <span class="comment">// formElement对象转成FormData对象</span></span><br><span class="line">    <span class="keyword">const</span> formData = <span class="keyword">new</span> <span class="title class_">FormData</span>(formEl) </span><br><span class="line">    xhr.<span class="title function_">send</span>(formData)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4.传递参数方式四: post -&gt; json</span></span><br><span class="line">    xhr.<span class="title function_">open</span>(<span class="string">&quot;post&quot;</span>, <span class="string">&quot;http://localhost:8080/postjson&quot;</span>)</span><br><span class="line">    xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&quot;Content-type&quot;</span>, <span class="string">&quot;application/json&quot;</span>)</span><br><span class="line">    xhr.<span class="title function_">send</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123;<span class="attr">name</span>: <span class="string">&quot;lucy&quot;</span>, <span class="attr">age</span>: <span class="number">18</span>&#125;))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="Ajax网络请求封装"><a href="#Ajax网络请求封装" class="headerlink" title="Ajax网络请求封装"></a>Ajax网络请求封装</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">myAjax</span>(<span class="params">&#123;</span></span><br><span class="line"><span class="params">    url,</span></span><br><span class="line"><span class="params">    method = <span class="string">&quot;get&quot;</span>,</span></span><br><span class="line"><span class="params">    data = &#123;&#125;,</span></span><br><span class="line"><span class="params">    timeout = <span class="number">10000</span>,</span></span><br><span class="line"><span class="params">    headers = &#123;&#125;</span></span><br><span class="line"><span class="params">&#125; = &#123;&#125;</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">    <span class="keyword">const</span> promise = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        xhr.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (xhr.<span class="property">status</span> &gt;= <span class="number">200</span> &amp;&amp; xhr.<span class="property">status</span> &lt; <span class="number">300</span>) &#123;</span><br><span class="line">                <span class="title function_">resolve</span>(xhr.<span class="property">response</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="title function_">reject</span>(&#123; status : xhr.<span class="property">status</span>, <span class="attr">message</span>: xhr.<span class="property">statusText</span>&#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        xhr.<span class="property">responseType</span> = <span class="string">&quot;json&quot;</span>;</span><br><span class="line">        xhr.<span class="property">timeout</span> = timeout;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (method.<span class="title function_">toUpperCase</span>() === <span class="string">&quot;GET&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">const</span> queryStrings = [];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> data) &#123;</span><br><span class="line">                queryStrings.<span class="title function_">push</span>(<span class="string">`<span class="subst">$&#123;key&#125;</span>=<span class="subst">$&#123;data[key]&#125;</span>`</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            url = url + <span class="string">&quot;?&quot;</span> + queryStrings.<span class="title function_">join</span>(<span class="string">&quot;&amp;&quot;</span>);</span><br><span class="line">            xhr.<span class="title function_">open</span>(method, url);</span><br><span class="line">            xhr.<span class="title function_">send</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            xhr.<span class="title function_">open</span>(method, url);</span><br><span class="line">            xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&quot;Content-type&quot;</span>, <span class="string">&quot;application/json&quot;</span>);</span><br><span class="line">            xhr.<span class="title function_">send</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(data));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    </span><br><span class="line">    promise.<span class="property">xhr</span> = xhr;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> promise;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line"><span class="keyword">const</span> promise = <span class="title function_">hyajax</span>(&#123;</span><br><span class="line">    <span class="attr">url</span>: <span class="string">&quot;http://localhost:8080/get&quot;</span>,</span><br><span class="line">    <span class="attr">data</span>: &#123;</span><br><span class="line">        <span class="attr">username</span>: <span class="string">&quot;lucy&quot;</span>,</span><br><span class="line">        <span class="attr">password</span>: <span class="string">&quot;123456&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">promise.<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;res:&quot;</span>, res)</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;err:&quot;</span>, err)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="Fetch-API"><a href="#Fetch-API" class="headerlink" title="Fetch API"></a>Fetch API</h1><p>Fetch可以看做早期的XMLHttpRequest的替代方案，它的返回值是Promise，而且不像XMLHttpRequest一样所有操作都在同一个对象上。</p>
+<p>fetch函数的使用：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Promise</span>&lt;<span class="title class_">Response</span>&gt; <span class="title function_">fetch</span>(input[, init]);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>input：定义要获取的资源地址，可以是URL字符串，也可以是Request对象类型</li>
+<li>init：其他初始化参数<ul>
+<li>method：请求使用的方法，如GET、POST</li>
+<li>headers：请求的头信息</li>
+<li>body：请求的body信息</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fetch</span>(<span class="string">&quot;http://localhost:8080/hello&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> res.<span class="title function_">json</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 基于async、await的使用方案</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getData</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&quot;http://localhost:8080/hello&quot;</span>);</span><br><span class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> response.<span class="title function_">json</span>();</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">getData</span>();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>创建POST请求或其他方法请求，需要使用fetch选项：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getData</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&quot;http://localhost:8080/hello&quot;</span>, &#123;</span><br><span class="line">        <span class="attr">method</span>: <span class="string">&quot;post&quot;</span>,</span><br><span class="line">        <span class="attr">headers</span>: &#123;</span><br><span class="line">            “<span class="title class_">Content</span>-<span class="title class_">Type</span><span class="string">&quot;: &quot;</span>application/x-www-form-urlencoded<span class="string">&quot;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        body: &quot;</span>name=lucy&amp;age=<span class="number">8</span><span class="string">&quot;</span></span><br><span class="line"><span class="string">    &#125;);</span></span><br><span class="line"><span class="string">    const data = await response.json();</span></span><br><span class="line"><span class="string">    console.log(&quot;</span><span class="attr">data</span>: <span class="string">&quot;, data);</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h1><p>XHR文件上传：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> uploadBtn = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.upload&quot;</span>)</span><br><span class="line">uploadBtn.<span class="property">onclick</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 1.创建对象</span></span><br><span class="line">    <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2.监听结果</span></span><br><span class="line">    xhr.<span class="property">onload</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(xhr.<span class="property">response</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    xhr.<span class="property">onprogress</span> = <span class="keyword">function</span>(<span class="params">event</span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(event)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    xhr.<span class="property">responseType</span> = <span class="string">&quot;json&quot;</span></span><br><span class="line">    xhr.<span class="title function_">open</span>(<span class="string">&quot;post&quot;</span>, <span class="string">&quot;http://localhost:8080/upload&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 表单</span></span><br><span class="line">    <span class="keyword">const</span> fileEl = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.file&quot;</span>)</span><br><span class="line">    <span class="keyword">const</span> file = fileEl.<span class="property">files</span>[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> formData = <span class="keyword">new</span> <span class="title class_">FormData</span>()</span><br><span class="line">    formData.<span class="title function_">append</span>(<span class="string">&quot;avatar&quot;</span>, file)</span><br><span class="line"></span><br><span class="line">    xhr.<span class="title function_">send</span>(formData)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>fetch文件上传：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> uploadBtn = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.upload&quot;</span>)</span><br><span class="line">uploadBtn.<span class="property">onclick</span> = <span class="keyword">async</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 表单</span></span><br><span class="line">    <span class="keyword">const</span> fileEl = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.file&quot;</span>)</span><br><span class="line">    <span class="keyword">const</span> file = fileEl.<span class="property">files</span>[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> formData = <span class="keyword">new</span> <span class="title class_">FormData</span>()</span><br><span class="line">    formData.<span class="title function_">append</span>(<span class="string">&quot;avatar&quot;</span>, file)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送fetch请求</span></span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&quot;http:/localhost:8080/upload&quot;</span>, &#123;</span><br><span class="line">        <span class="attr">method</span>: <span class="string">&quot;post&quot;</span>,</span><br><span class="line">        <span class="attr">body</span>: formData</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> response.<span class="title function_">json</span>()</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;res:&quot;</span>, res)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+   
+     <div>
+       <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+     </div>
+   
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/29/js/17_JavaScript%E8%AF%AD%E6%B3%95%E8%A1%A5%E5%85%85/" rel="prev" title="其他语法">
+      <i class="fa fa-chevron-left"></i> 其他语法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10/02/js/19_JavaScript%E6%A8%A1%E5%9D%97%E5%8C%96/" rel="next" title="JavaScript模块化">
+      JavaScript模块化 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81ODI4OS8zNDc1Mg=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AJAX%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82"><span class="nav-number">1.</span> <span class="nav-text">AJAX发送请求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#XHR%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">XHR基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XMLHttpRequest%E7%9A%84%E7%8A%B6%E6%80%81"><span class="nav-number">1.2.</span> <span class="nav-text">XMLHttpRequest的状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE%E5%92%8C%E5%93%8D%E5%BA%94%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">响应数据和响应类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GET-x2F-POST%E8%AF%B7%E6%B1%82%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0"><span class="nav-number">1.4.</span> <span class="nav-text">GET&#x2F;POST请求传递参数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ajax%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E5%B0%81%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">Ajax网络请求封装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fetch-API"><span class="nav-number">3.</span> <span class="nav-text">Fetch API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="nav-number">4.</span> <span class="nav-text">文件上传</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="学徒"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">学徒</p>
+  <div class="site-description" itemprop="description">千里之行，始于足下</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; Sun Mar 26 2023 08:00:00 GMT+0800 (中国标准时间) – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">学徒</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">224k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:24</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

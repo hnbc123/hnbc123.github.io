@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="错误处理throw关键字throw语句用于抛出一个用户自定义的异常。当遇到throw语句时，当前的函数执行会被停止。throw表达式就是在throw后面可以跟上一个表达式来表示具体的异常信息。throw关键字可以跟的类型：  基本数据类型：如number、string、Boolean 对象类型  Error类型JavaScript已经提供了一个Error类，抛出异常时可以直接创建这个类的对象。 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="其他语法">
+<meta property="og:url" content="http://example.com/2023/09/29/js/17_JavaScript%E8%AF%AD%E6%B3%95%E8%A1%A5%E5%85%85/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="错误处理throw关键字throw语句用于抛出一个用户自定义的异常。当遇到throw语句时，当前的函数执行会被停止。throw表达式就是在throw后面可以跟上一个表达式来表示具体的异常信息。throw关键字可以跟的类型：  基本数据类型：如number、string、Boolean 对象类型  Error类型JavaScript已经提供了一个Error类，抛出异常时可以直接创建这个类的对象。 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-29T08:12:00.000Z">
+<meta property="article:modified_time" content="2023-09-30T12:38:40.337Z">
+<meta property="article:author" content="学徒">
+<meta property="article:tag" content="错误处理">
+<meta property="article:tag" content="Storage">
+<meta property="article:tag" content="正则表达式">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/09/29/js/17_JavaScript%E8%AF%AD%E6%B3%95%E8%A1%A5%E5%85%85/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>其他语法 | 学无止境</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">学无止境</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="fa fa-calendar fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/29/js/17_JavaScript%E8%AF%AD%E6%B3%95%E8%A1%A5%E5%85%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="学徒">
+      <meta itemprop="description" content="千里之行，始于足下">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学无止境">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          其他语法
+        </h1>
+
+        <div class="post-meta">
+
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-29 16:12:00" itemprop="dateCreated datePublished" datetime="2023-09-29T16:12:00+08:00">2023-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-30 20:38:40" itemprop="dateModified" datetime="2023-09-30T20:38:40+08:00">2023-09-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">web前端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/js/" itemprop="url" rel="index"><span itemprop="name">js</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h1><h2 id="throw关键字"><a href="#throw关键字" class="headerlink" title="throw关键字"></a>throw关键字</h2><p>throw语句用于抛出一个用户自定义的异常。当遇到throw语句时，当前的函数执行会被停止。<br>throw表达式就是在throw后面可以跟上一个表达式来表示具体的异常信息。<br>throw关键字可以跟的类型：</p>
+<ul>
+<li>基本数据类型：如number、string、Boolean</li>
+<li>对象类型</li>
+</ul>
+<h2 id="Error类型"><a href="#Error类型" class="headerlink" title="Error类型"></a>Error类型</h2><p>JavaScript已经提供了一个Error类，抛出异常时可以直接创建这个类的对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;error message&quot;</span>, <span class="string">&quot;123&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Error包含的属性：</p>
+<ul>
+<li>message：创建Error对象时传入的message</li>
+<li>name：Error的名称，通常和类名称一致</li>
+<li>stack：整个Error的错误信息，包括函数的调用栈</li>
+</ul>
+<p>Error的一些子类：</p>
+<ul>
+<li>RangeError：下标值越界</li>
+<li>SyntaxError：解析语法错误时使用</li>
+<li>TypeError：出现错误类型时使用</li>
+</ul>
+<h2 id="异常的捕获"><a href="#异常的捕获" class="headerlink" title="异常的捕获"></a>异常的捕获</h2><p>当函数抛出异常，但没有对异常进行处理时，这个异常会继续传递到上一个函数调用中。如果到了最顶层依然没有处理，就会报错并终止程序运行。<br>可以使用try catch对异常进行捕获处理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;error&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果有一些必须要执行的代码，可以使用finally来执行。<br>finally表示最终一定会被执行的代码结构，如果try和finally中都有返回值，那么会使用finally当中的返回值。</p>
+<h1 id="Storage"><a href="#Storage" class="headerlink" title="Storage"></a>Storage</h1><p>WebStorage提供了一种比cookie更直观的key、value存储方式：</p>
+<ul>
+<li>localStorage：本地存储，一种永久性存储方法，关闭网页重新打开，存储的内容依然保留</li>
+<li>sessionStorage：会话存储，提供的是本次会话的存储，关闭掉会话时，存储的内容会被清除</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;localStorage&quot;</span>);</span><br><span class="line">sessionStorage.<span class="title function_">setItem</span>(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;sessionStorage&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Storage常见属性：length，只读，表示存储的数据项数量<br>Storage常见方法：</p>
+<ul>
+<li>Storage.key(index)：返回第index个key名称</li>
+<li>Storage.getItem(key)：返回对应的value</li>
+<li>Storage.setItem(key, value)：设置值，如果值存在则更新</li>
+<li>Storage.removeItem(key)：删除值</li>
+<li>Storage.clear()：清空存储中的所有key</li>
+</ul>
+<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>JavaScript中使用RegExp来创建正则表达式，也可以使用字面量的方式。<br>正则表达式主要由两部分组成：模式(patterns)和修饰符(flags)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> re1 = <span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;i&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> re2 = <span class="regexp">/hello/i</span>;</span><br></pre></td></tr></table></figure>
+
+<p>常用方法：</p>
+<ul>
+<li>exec：执行查找匹配，返回一个数组，未匹配到返回null</li>
+<li>test：测试是否匹配，返回true或false</li>
+<li>match：执行查找匹配，返回一个数组，未匹配到返回null</li>
+<li>matchAll：执行查找所有匹配，返回迭代器</li>
+<li>search：测试匹配，返回匹配到的位置索引，失败返回-1</li>
+<li>replace：执行查找匹配，并使用替换字符串替换匹配的字符串</li>
+<li>split：用正则表达式或固定字符串分隔一个字符串</li>
+</ul>
+<p>常见修饰符：</p>
+<ul>
+<li>g：全部</li>
+<li>i：忽略大小写</li>
+<li>m：多行匹配</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> message = <span class="string">&quot;Hello ABC, abc, AaBcC&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> pattern = <span class="regexp">/abc/ig</span>;</span><br><span class="line"><span class="comment">// 获取字符串中所有abc</span></span><br><span class="line"><span class="keyword">const</span> results = message.<span class="title function_">match</span>(pattern);</span><br><span class="line"><span class="comment">// [&quot;ABC&quot;, &quot;abc&quot;, &quot;aBc&quot;]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(results);</span><br><span class="line"><span class="comment">// 将所有abc替换为大写</span></span><br><span class="line">message = message.<span class="title function_">replaceAll</span>(pattern, <span class="string">&quot;ABC&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="字符类规则"><a href="#字符类规则" class="headerlink" title="字符类规则"></a>字符类规则</h2><p>字符类匹配特定集中的任何符号：</p>
+<ul>
+<li>\d：数字，从0到9的字符</li>
+<li>\s：空格符合，包括空格、制表符、换行符和其他少数稀有字符</li>
+<li>\w：单字字符，拉丁字母或数字或下划线</li>
+<li>.：除换行符外的任何字符</li>
+</ul>
+<p>反向类：</p>
+<ul>
+<li>\D：非数字</li>
+<li>\S：非空格字符</li>
+<li>\W：非单字字符</li>
+</ul>
+<h2 id="锚点规则"><a href="#锚点规则" class="headerlink" title="锚点规则"></a>锚点规则</h2><p>符合^匹配文本开头，符合$匹配文本末尾，称为锚点：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> message = <span class="string">&quot;My name is lucy&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/^my/i</span>.<span class="title function_">test</span>(message)) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;以my开头&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/lucy$/</span>.<span class="title function_">test</span>(message)) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;以lucy结尾&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>词边界\b检查字符串中的位置一侧是否匹配\w，另一侧不匹配\w。</p>
+<p>匹配字符串中的时间：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> message = <span class="string">&quot;now time is 11:16, work finish&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> timePattern = <span class="regexp">/\b\d\d:\d\d\b/g</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(message.<span class="title function_">match</span>(timePattern));</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="转义字符串"><a href="#转义字符串" class="headerlink" title="转义字符串"></a>转义字符串</h2><p>如果要把特殊字符作为常规字符使用，需要进行转义，只需在前面加个反斜杠。<br>常见的需要转移的字符：[] \ ^ $ . | ? * + ( )<br>&#x2F; 不是特殊符合，但在字面量正则表达式中也需要转义。</p>
+<p>匹配所有以.js或.jsx结尾的文件名：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fileNames = [<span class="string">&quot;abc.js&quot;</span>, <span class="string">&quot;cba.java&quot;</span>, <span class="string">&quot;nba.html&quot;</span>, <span class="string">&quot;mba.jsx&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> newNames = fileNames.<span class="title function_">filter</span>(<span class="function"><span class="params">item</span> =&gt;</span> <span class="regexp">/\.jsx?$/</span>.<span class="title function_">test</span>(item));</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(newNames);</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><p>在方括号[]中的几个字符或字符类意味着搜索给定的字符中的任意一个。<br>如：[abc]表示查找字符a、b、c中任意一个；[0-5]表示0到5的数字。</p>
+<p>例：匹配手机号</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> phonePattern = <span class="regexp">/^1[356/89]\d&#123;9&#125;$/</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h2><p>可以用{n}表示所需的数量，如{5}表示5位，{3,5}表示3到5位。</p>
+<p>缩写:</p>
+<ul>
+<li>+：代表一个或多个，相当于{1,}</li>
+<li>?：代表零个或一个，相当于{0,1}</li>
+<li>*：代表零个或多个，相当于{0,}</li>
+</ul>
+<p>例：匹配开始或结束标签</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> htmlElement = <span class="string">&quot;&lt;div&gt;&lt;p&gt;哈哈哈&lt;/p&gt;&lt;span&gt;呵呵呵&lt;/span&gt;&lt;/div&gt;&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> tagPattern = <span class="regexp">/&lt;\/?[a-z][a-z0-9]*&gt;/ig</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(htmlElement.<span class="title function_">match</span>(tagPattern));</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="贪婪模式和惰性模式"><a href="#贪婪模式和惰性模式" class="headerlink" title="贪婪模式和惰性模式"></a>贪婪模式和惰性模式</h2><p>需求：匹配所有使用《》包裹的内容</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> message = <span class="string">&quot;我最喜欢的书是《西游记》和《水浒传》&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> results = message.<span class="title function_">match</span>(<span class="regexp">/《.+》/g</span>);</span><br><span class="line"><span class="comment">// 《西游记》和《水浒传》</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(results);</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下的匹配规则是查找到匹配内容后，会继续向后查找，直到最后一个匹配的内容，这种匹配方式称为贪婪模式。</p>
+<p>懒惰模式只要获取到对应的内容后就不再继续向后匹配，可以在量词后加?来启用，匹配模式变为*?、+?或??。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> message = <span class="string">&quot;我最喜欢的书是《西游记》和《水浒传》&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> results = message.<span class="title function_">match</span>(<span class="regexp">/《.+?》/g</span>);</span><br><span class="line"><span class="comment">// [《西游记》,《水浒传》]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(results);</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="捕获组"><a href="#捕获组" class="headerlink" title="捕获组"></a>捕获组</h2><p>模式的一部分可以用括号括起来，称为捕获组。它允许将匹配的一部分作为结果数组中的单独项，将括号视为一个整体。</p>
+<p>方法str.match(regexp)，如果regexp没有g标志，将查找第一个匹配并将它作为一个数组返回。在索引0处完全匹配；索引1处为第一个括号的内容；索引2处为第二个括号的内容……</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> str = <span class="string">&quot;&lt;h1&gt;title&lt;/h1&gt;&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> result = str.<span class="title function_">match</span>(<span class="regexp">/&lt;(.+?)&gt;/</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(result[<span class="number">0</span>]); <span class="comment">// &lt;h1&gt;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(result[<span class="number">1</span>]); <span class="comment">// h1</span></span><br></pre></td></tr></table></figure>
+
+<p>命名组：可以通过在左括号后加?&lt;名称&gt;给括号命名。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> result = message.<span class="title function_">match</span>(<span class="regexp">/(?&lt;myName&gt;hel)lo/i</span>);</span><br></pre></td></tr></table></figure>
+
+<p>非捕获组：有时需要括号才能正确应用量词，但不希望内容出现在结果中，可以通过在开头添加?:来排除组。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> result = message.<span class="title function_">match</span>(<span class="regexp">/(?&lt;name&gt;hel)(?:lo)&#123;2&#125;/i</span>)</span><br></pre></td></tr></table></figure>
+
+<p>可用竖线表示或，通常和捕获组一起使用，在其中表示多个值。</p>
+<h2 id="时间格式化"><a href="#时间格式化" class="headerlink" title="时间格式化"></a>时间格式化</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">formatDate</span>(<span class="params">time, formatString</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> date = <span class="keyword">new</span> <span class="title class_">Date</span>(time);</span><br><span class="line">  <span class="keyword">const</span> obj = &#123;</span><br><span class="line">    <span class="string">&quot;y+&quot;</span>: date.<span class="title function_">getFullYear</span>(),</span><br><span class="line">    <span class="string">&quot;M+&quot;</span>: date.<span class="title function_">getMonth</span>() + <span class="number">1</span>,</span><br><span class="line">    <span class="string">&quot;d+&quot;</span>: date.<span class="title function_">getDate</span>(),</span><br><span class="line">    <span class="string">&quot;h+&quot;</span>: date.<span class="title function_">getHours</span>(),</span><br><span class="line">    <span class="string">&quot;m+&quot;</span>: date.<span class="title function_">getMinutes</span>(),</span><br><span class="line">    <span class="string">&quot;s+&quot;</span>: date.<span class="title function_">getSeconds</span>()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> obj) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">new</span> <span class="title class_">RegExp</span>(<span class="string">`(<span class="subst">$&#123;key&#125;</span>)`</span>).<span class="title function_">test</span>(formatString)) &#123;</span><br><span class="line">      <span class="keyword">const</span> value = (obj[key] + <span class="string">&quot;&quot;</span>).<span class="title function_">padStart</span>(<span class="number">2</span>, <span class="string">&quot;0&quot;</span>);</span><br><span class="line">      formatString = formatString.<span class="title function_">replace</span>(<span class="title class_">RegExp</span>.<span class="property">$1</span>, value);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> formatString;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+
+   
+     <div>
+       <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+     </div>
+   
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86/" rel="tag"># 错误处理</a>
+              <a href="/tags/Storage/" rel="tag"># Storage</a>
+              <a href="/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" rel="tag"># 正则表达式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/29/js/16_%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E5%87%BD%E6%95%B0%E5%8A%9F%E8%83%BD/" rel="prev" title="手写函数">
+      <i class="fa fa-chevron-left"></i> 手写函数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/09/30/js/18_JavaScript%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="next" title="网络编程">
+      网络编程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81ODI4OS8zNDc1Mg=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">错误处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#throw%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-number">1.1.</span> <span class="nav-text">throw关键字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Error%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">Error类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E7%9A%84%E6%8D%95%E8%8E%B7"><span class="nav-number">1.3.</span> <span class="nav-text">异常的捕获</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Storage"><span class="nav-number">2.</span> <span class="nav-text">Storage</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">正则表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E7%B1%BB%E8%A7%84%E5%88%99"><span class="nav-number">3.2.</span> <span class="nav-text">字符类规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%9A%E7%82%B9%E8%A7%84%E5%88%99"><span class="nav-number">3.3.</span> <span class="nav-text">锚点规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">3.4.</span> <span class="nav-text">转义字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E5%90%88"><span class="nav-number">3.5.</span> <span class="nav-text">集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8F%E8%AF%8D"><span class="nav-number">3.6.</span> <span class="nav-text">量词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%AA%E5%A9%AA%E6%A8%A1%E5%BC%8F%E5%92%8C%E6%83%B0%E6%80%A7%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.7.</span> <span class="nav-text">贪婪模式和惰性模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%95%E8%8E%B7%E7%BB%84"><span class="nav-number">3.8.</span> <span class="nav-text">捕获组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="nav-number">3.9.</span> <span class="nav-text">时间格式化</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="学徒"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">学徒</p>
+  <div class="site-description" itemprop="description">千里之行，始于足下</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; Sun Mar 26 2023 08:00:00 GMT+0800 (中国标准时间) – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">学徒</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">224k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:24</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="npm概述npm，全称Node Package Manager，也就是Node包管理工具，目前在前端项目中也是用它来管理依赖的包。 npm属于node的一个管理工具，需要先安装Node。 npm的包是发布到registry上，当安装一个包时，其实是从registry上进行下载的。 配置文件每个项目都会有一个对应的配置文件，这个配置文件记录项目的名称、版本号、项目描述等，也记录项目依赖的其他库的信息">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端包管理工具">
+<meta property="og:url" content="http://example.com/2023/10/04/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/01_%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="npm概述npm，全称Node Package Manager，也就是Node包管理工具，目前在前端项目中也是用它来管理依赖的包。 npm属于node的一个管理工具，需要先安装Node。 npm的包是发布到registry上，当安装一个包时，其实是从registry上进行下载的。 配置文件每个项目都会有一个对应的配置文件，这个配置文件记录项目的名称、版本号、项目描述等，也记录项目依赖的其他库的信息">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-04T01:30:00.000Z">
+<meta property="article:modified_time" content="2023-10-04T02:08:19.095Z">
+<meta property="article:author" content="学徒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/10/04/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/01_%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>前端包管理工具 | 学无止境</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">学无止境</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="fa fa-calendar fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/04/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/01_%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="学徒">
+      <meta itemprop="description" content="千里之行，始于足下">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学无止境">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端包管理工具
+        </h1>
+
+        <div class="post-meta">
+
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-04 09:30:00 / 修改时间：10:08:19" itemprop="dateCreated datePublished" datetime="2023-10-04T09:30:00+08:00">2023-10-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">web前端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">包管理工具</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="npm"><a href="#npm" class="headerlink" title="npm"></a>npm</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>npm，全称Node Package Manager，也就是Node包管理工具，目前在前端项目中也是用它来管理依赖的包。</p>
+<p>npm属于node的一个管理工具，需要先安装Node。</p>
+<p>npm的包是发布到registry上，当安装一个包时，其实是从registry上进行下载的。</p>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>每个项目都会有一个对应的配置文件，这个配置文件记录项目的名称、版本号、项目描述等，也记录项目依赖的其他库的信息和依赖库的版本号。这个文件是package.json。</p>
+<p>配置文件生成方式：</p>
+<ul>
+<li>手动创建项目，npm init -y</li>
+<li>通过脚手架创建项目，脚手架会生成package.json</li>
+</ul>
+<p>常见的属性：</p>
+<ul>
+<li>name：项目的名称，必填</li>
+<li>version：当前项目版本号，必填</li>
+<li>description：项目的基本描述</li>
+<li>author：作者相关信息</li>
+<li>license：开源协议</li>
+<li>private：当值为true时，npm不能发布</li>
+<li>main：设置程序的入口</li>
+<li>scripts：用于配置一些脚本命令，以键值对的形式存在</li>
+<li>dependencies：指定无论开发环境还是生成环境都需要依赖的包</li>
+<li>devDependencies：在生成环境不需要的包会通过npm install webpack –save-dev安装到devDependencies属性中</li>
+<li>peerDependencies：对等依赖，即依赖的包必须是以另外一个宿主包为前提。</li>
+</ul>
+<h2 id="依赖的版本管理"><a href="#依赖的版本管理" class="headerlink" title="依赖的版本管理"></a>依赖的版本管理</h2><p>npm的包通常需要遵从semver版本规范，即X.Y.Z：</p>
+<ul>
+<li>X主版本号：不兼容的API修改</li>
+<li>Y次版本号：向下兼容的功能性新增</li>
+<li>Z修订号：向下兼容的问题修正</li>
+</ul>
+<p>版本号依赖下载：</p>
+<ul>
+<li>x.y.z：明确的版本号</li>
+<li>^x.y.z：x保持不变，y和z安装最新的版本</li>
+<li>~x.y.z：x和y保持不变，z安装最新的版本</li>
+</ul>
+<h2 id="package-lock-json"><a href="#package-lock-json" class="headerlink" title="package-lock.json"></a>package-lock.json</h2><p>package-lock.json文件解析：</p>
+<ul>
+<li>name：项目的名称</li>
+<li>version：项目的版本</li>
+<li>lockfileVersion：lock文件的版本</li>
+<li>requires：使用requires来跟踪模块的依赖关系</li>
+<li>dependencies：项目的依赖<ul>
+<li>version：实际安装的版本</li>
+<li>resolved：记录下载的地址，registry仓库中的位置</li>
+<li>required&#x2F;dependencies：记录当前模块的依赖</li>
+<li>integrity：用来从缓存中获取索引，再通过索引去获取压缩包文件</li>
+</ul>
+</li>
+</ul>
+<h2 id="npm常用命令"><a href="#npm常用命令" class="headerlink" title="npm常用命令"></a>npm常用命令</h2><p>安装npm包分两种情况：</p>
+<ul>
+<li>全局安装：npm install webpack -g</li>
+<li>项目（局部）安装：npm install webpack</li>
+</ul>
+<p>局部安装分为开发时依赖和生产时依赖：</p>
+<ul>
+<li>默认安装开发和生产依赖：npm install axios</li>
+<li>开发依赖：npm install webpack -D</li>
+<li>根据package.json中的依赖包：npm install</li>
+</ul>
+<p>npm install会检测是否有package-lock.json文件。</p>
+<p>如果没有：</p>
+<ul>
+<li>分析依赖关系。因为包可能会依赖其他的包，并且多个包之间会产生相同依赖。</li>
+<li>从registry仓库中下载压缩包</li>
+<li>获取到压缩包后会对压缩包进行缓存（从npm5开始）</li>
+<li>将压缩包解压到项目的node_modules文件夹中</li>
+</ul>
+<p>如果有：</p>
+<ul>
+<li>检测lock中包的版本是否和package.json一致，若不一致重新构建依赖</li>
+<li>一致的情况下，优先查找缓存，若没找到从registry仓库下载</li>
+<li>找到缓存会获取压缩文件并解压到node_modules文件夹中</li>
+</ul>
+<p>其他命令：</p>
+<ul>
+<li>卸载某个依赖包：<ul>
+<li>npm uninstall package</li>
+<li>npm uninstall package –save-dev</li>
+<li>npm uninstall package -D</li>
+</ul>
+</li>
+<li>强制重新构建：npm rebuild</li>
+<li>清除缓存：npm cache clean</li>
+</ul>
+<h2 id="npm发布包"><a href="#npm发布包" class="headerlink" title="npm发布包"></a>npm发布包</h2><p>发布步骤：</p>
+<ul>
+<li><p>注册npm账号：<a target="_blank" rel="noopener" href="https://www.npmjs.com/%EF%BC%8C%E9%80%89%E6%8B%A9sign">https://www.npmjs.com/，选择sign</a> up</p>
+</li>
+<li><p>在命令行登录：npm login</p>
+</li>
+<li><p>修改package.json</p>
+</li>
+<li><p>发布到npm registry上：npm publish</p>
+</li>
+</ul>
+<p>更新仓库时：修改版本号、重新发布</p>
+<p>删除发布的包：npm unpublish</p>
+<p>让发布的包过期：npm deprecate</p>
+<h1 id="yarn"><a href="#yarn" class="headerlink" title="yarn"></a>yarn</h1><p>早期的npm存在安装依赖速度慢、版本依赖混乱等一系列问题，yarn是为了弥补这些缺陷而出现的。</p>
+<p>命令对比：</p>
+<table>
+<thead>
+<tr>
+<th>NPM</th>
+<th>Yarn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>npm install</td>
+<td>yarn install</td>
+</tr>
+<tr>
+<td>npm install [package]</td>
+<td>yarn add [package]</td>
+</tr>
+<tr>
+<td>npm install –save-dev [package]</td>
+<td>yarn add [package] [–dev&#x2F;-D]</td>
+</tr>
+<tr>
+<td>npm rebuild</td>
+<td>yarn install –force</td>
+</tr>
+<tr>
+<td>npm uninstall [package]</td>
+<td>yarn remove [package]</td>
+</tr>
+</tbody></table>
+<h1 id="cnpm"><a href="#cnpm" class="headerlink" title="cnpm"></a>cnpm</h1><p>有时可能没法从<a href="https://registry.npmjs.org下载需要的包，如果不希望修改npm镜像，可以使用cnpm，并且将cnpm设置为淘宝镜像：">https://registry.npmjs.org下载需要的包，如果不希望修改npm镜像，可以使用cnpm，并且将cnpm设置为淘宝镜像：</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g cnpm --registry=https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="npx"><a href="#npx" class="headerlink" title="npx"></a>npx</h1><p>如果在全局和项目中都安装了某个工具，在终端执行命令时，会先在当前目录寻找，由于项目工具安装在node_modules文件夹下，当前目录找不到，就会去全局寻找。</p>
+<p>要使用局部命令，有以下方式：</p>
+<ul>
+<li>在node_module文件夹寻找：.&#x2F;node_modules&#x2F;.bin&#x2F;webpack –version</li>
+<li>修改package.json中的scripts，它会默认先在使用当前项目安装的工具</li>
+<li>使用npx：npx webpack –version</li>
+</ul>
+<h1 id="pnpm"><a href="#pnpm" class="headerlink" title="pnpm"></a>pnpm</h1><p>pnpm可以理解为performant npm的缩写。</p>
+<p>硬链接(hard link)：电脑文件系统中的多个文件平等地共享同一个文件存储单元。删除一个文件名字后，还可以用其他名字继续访问该文件。</p>
+<p>符号链接(软链接soft link、Symbolic link)：是一类特殊的文件，其包含有一条以绝对路径或相对路径的形式指向其他文件或目录的引用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">文件的硬链接：</span><br><span class="line">	window: mklink /H aaa_hard.js aaa.js</span><br><span class="line">	macos: ln foo.js foo_hard.js</span><br><span class="line">文件的软链接：</span><br><span class="line">	window: mklink aaa_soft.js aaa.js</span><br><span class="line">	macos: ln -s foo.js foo_copy.js</span><br></pre></td></tr></table></figure>
+
+
+
+<p>当使用npm或Yarn时，如果有多个项目需要一个相同的依赖包，那么每个项目都会在硬盘中保存一份该依赖包的副本。</p>
+<p>如果使用pnpm，依赖包将被存放在一个统一的位置，如果对同一依赖包使用相同的版本，那么磁盘上只有这个依赖包的一个文件；如果使用不同的版本，仅有版本之间不同的文件会被存储。</p>
+<p>pnpm会创建非扁平的node_modules目录。</p>
+<p>安装pnpm：npm install -g pnpm</p>
+<table>
+<thead>
+<tr>
+<th>npm命令</th>
+<th>pnpm等价命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>npm install</td>
+<td>pnpm install</td>
+</tr>
+<tr>
+<td>npm install <pkg></td>
+<td>pnpm add <pkg></td>
+</tr>
+<tr>
+<td>npm uninstall <pkg></td>
+<td>pnpm remove <pkg></td>
+</tr>
+<tr>
+<td>npm run <cmd></td>
+<td>pnpm <cmd></td>
+</tr>
+</tbody></table>
+<p>pnpm7.0之后，统一存储位置为：%LOCALAPPDATA%&#x2F;pnpm&#x2F;store</p>
+<p>可以通过pnpm store path获取当前活跃的store目录。</p>
+<p>pnpm store prune可以从store中删除当前未被引用的包来释放store的空间。</p>
+
+    </div>
+
+    
+    
+    
+
+   
+     <div>
+       <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+     </div>
+   
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/10/02/js/19_JavaScript%E6%A8%A1%E5%9D%97%E5%8C%96/" rel="prev" title="JavaScript模块化">
+      <i class="fa fa-chevron-left"></i> JavaScript模块化
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10/04/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/02_webpack/" rel="next" title="webpack">
+      webpack <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81ODI4OS8zNDc1Mg=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#npm"><span class="nav-number">1.</span> <span class="nav-text">npm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E7%9A%84%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">依赖的版本管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#package-lock-json"><span class="nav-number">1.4.</span> <span class="nav-text">package-lock.json</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.5.</span> <span class="nav-text">npm常用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm%E5%8F%91%E5%B8%83%E5%8C%85"><span class="nav-number">1.6.</span> <span class="nav-text">npm发布包</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#yarn"><span class="nav-number">2.</span> <span class="nav-text">yarn</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cnpm"><span class="nav-number">3.</span> <span class="nav-text">cnpm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#npx"><span class="nav-number">4.</span> <span class="nav-text">npx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pnpm"><span class="nav-number">5.</span> <span class="nav-text">pnpm</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="学徒"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">学徒</p>
+  <div class="site-description" itemprop="description">千里之行，始于足下</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; Sun Mar 26 2023 08:00:00 GMT+0800 (中国标准时间) – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">学徒</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">224k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:24</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
