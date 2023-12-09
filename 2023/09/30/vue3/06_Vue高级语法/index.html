@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="自定义指令概述在某些情况下需要对DOM元素进行底层操作，此时可使用自定义指令。自定义指令分两种：  自定义局部指令：组件的directives选项，只能在当前组件中使用 自定义全局指令：app的directive方法，可以在任意组件中被使用  局部自定义指令实现局部自定义指令只需要在组件选项中使用directives即可。注意：在对象中编写自定义指令名称不需要加v-。 1234567891011&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue高级语法">
+<meta property="og:url" content="http://example.com/2023/09/30/vue3/06_Vue%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="自定义指令概述在某些情况下需要对DOM元素进行底层操作，此时可使用自定义指令。自定义指令分两种：  自定义局部指令：组件的directives选项，只能在当前组件中使用 自定义全局指令：app的directive方法，可以在任意组件中被使用  局部自定义指令实现局部自定义指令只需要在组件选项中使用directives即可。注意：在对象中编写自定义指令名称不需要加v-。 1234567891011&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-30T12:23:00.000Z">
+<meta property="article:modified_time" content="2023-12-09T11:48:45.901Z">
+<meta property="article:author" content="学徒">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/09/30/vue3/06_Vue%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Vue高级语法 | 学无止境</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">学无止境</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="fa fa-calendar fa-fw"></i>资源</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/30/vue3/06_Vue%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="学徒">
+      <meta itemprop="description" content="千里之行，始于足下">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学无止境">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vue高级语法
+        </h1>
+
+        <div class="post-meta">
+
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-30 20:23:00" itemprop="dateCreated datePublished" datetime="2023-09-30T20:23:00+08:00">2023-09-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-09 19:48:45" itemprop="dateModified" datetime="2023-12-09T19:48:45+08:00">2023-12-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4/" itemprop="url" rel="index"><span itemprop="name">自定义指令</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="自定义指令"><a href="#自定义指令" class="headerlink" title="自定义指令"></a>自定义指令</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在某些情况下需要对DOM元素进行底层操作，此时可使用自定义指令。<br>自定义指令分两种：</p>
+<ul>
+<li>自定义局部指令：组件的directives选项，只能在当前组件中使用</li>
+<li>自定义全局指令：app的directive方法，可以在任意组件中被使用</li>
+</ul>
+<h2 id="局部自定义指令"><a href="#局部自定义指令" class="headerlink" title="局部自定义指令"></a>局部自定义指令</h2><p>实现局部自定义指令只需要在组件选项中使用directives即可。<br><strong>注意：在对象中编写自定义指令名称不需要加v-。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">  export default &#123;</span><br><span class="line">    directives: &#123;</span><br><span class="line">      focus: &#123;</span><br><span class="line">        mounted(el) &#123;</span><br><span class="line">          el.focus()</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>之后在组件上添加自定义指令即可：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">v-model</span>=<span class="string">&quot;username&quot;</span> <span class="attr">v-focus</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="全局自定义指令"><a href="#全局自定义指令" class="headerlink" title="全局自定义指令"></a>全局自定义指令</h2><p>app的directive方法可以定义全局指令，在任何组件都可以直接使用：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">app.<span class="title function_">directive</span>(<span class="string">&quot;focus&quot;</span>, &#123;</span><br><span class="line">  <span class="title function_">mounted</span>(<span class="params">el</span>) &#123;</span><br><span class="line">    el.<span class="title function_">focus</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="指令的生命周期"><a href="#指令的生命周期" class="headerlink" title="指令的生命周期"></a>指令的生命周期</h2><p>一个指令定义的对象，Vue提供了如下的几个钩子函数：</p>
+<ul>
+<li>created：在绑定元素的attribute或事件监听器被应用之前调用</li>
+<li>beforeMount：当指令第一次绑定到元素并且在挂载父组件之前调用</li>
+<li>mounted：在绑定元素的父组件被挂载后调用</li>
+<li>beforeUpdate：在更新包含组件的VNode之前调用</li>
+<li>updated：在包含组件的VNode及其子组件的VNode更新后调用</li>
+<li>beforeUnmount：在卸载绑定元素的父组件之前调用</li>
+<li>unmounted：当指令与元素解除绑定且父组件已卸载时，只调用一次</li>
+</ul>
+<h2 id="指令的参数和修饰符"><a href="#指令的参数和修饰符" class="headerlink" title="指令的参数和修饰符"></a>指令的参数和修饰符</h2><p>如果指令需要接收参数或修饰符，可以通过生命周期的第二个参数bingings获取相应的内容。<br>修饰符通过bingings.modifiers获取；值通过bingings.value获取。</p>
+<p>示例：自定义时间格式化指令</p>
+<p>自定义指令：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> dayjs <span class="keyword">from</span> <span class="string">&#x27;dayjs&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span>(<span class="params">app</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> format = <span class="string">&quot;YYYY-MM-DD HH:mm:ss&quot;</span>;</span><br><span class="line">  app.<span class="title function_">directive</span>(<span class="string">&quot;format-time&quot;</span>, &#123;</span><br><span class="line">    <span class="title function_">created</span>(<span class="params">el, bingings</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (bingings.<span class="property">value</span>) &#123;</span><br><span class="line">        format = bingings.<span class="property">value</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">mounted</span>(<span class="params">el</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> textContent = el.<span class="property">textContent</span>;</span><br><span class="line">      <span class="keyword">let</span> timestamp = <span class="built_in">parseInt</span>(el.<span class="property">textContent</span>);</span><br><span class="line">      <span class="keyword">if</span> (textContent.<span class="property">length</span> === <span class="number">10</span>) &#123;</span><br><span class="line">        timestamp = timestamp * <span class="number">1000</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      el.<span class="property">textContent</span> = <span class="title function_">dayjs</span>(timestamp).<span class="title function_">format</span>(format);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将自定义指令绑定到全局对象上：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app = <span class="title function_">createApp</span>(<span class="title class_">App</span>)</span><br><span class="line">app.<span class="title function_">use</span>(formatTime);</span><br><span class="line">app.<span class="title function_">mount</span>(<span class="string">&#x27;#app&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>使用自定义指令：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h2</span> <span class="attr">v-format-time</span>=<span class="string">&quot;&#x27;YYYY-MM-DD&#x27;&quot;</span>&gt;</span>&#123;&#123; time &#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="Teleport"><a href="#Teleport" class="headerlink" title="Teleport"></a>Teleport</h1><h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>在组件化开发中，封装一个组件A，在另外一个组件B中使用，那么组件A中的template元素，会被挂载到组件B中template的某个位置，最终应用程序会形成一颗DOM树结构。<br>如果希望组件不是挂载在这个组件树上，而是移动到Vue App之外的其他位置，可以通过teleport完成。</p>
+<p>Teleport是一个Vue提供的内置组件，类似于react的Portals。<br>它有两个属性：</p>
+<ul>
+<li>to：指定将其中的内容移动到的目标元素，可以使用选择器</li>
+<li>disable：是否禁用teleport的功能</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class=&quot;my-app&quot;&gt;</span><br><span class="line">    &lt;teleport to=&quot;body&quot;&gt;</span><br><span class="line">      &lt;h2&gt;title&lt;/h2&gt;</span><br><span class="line">    &lt;/teleport&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="和组件结合使用"><a href="#和组件结合使用" class="headerlink" title="和组件结合使用"></a>和组件结合使用</h2><p>可以在teleport中使用组件，也可以传入一些数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class=&quot;my-app&quot;&gt;</span><br><span class="line">    &lt;teleport to=&quot;body&quot;&gt;</span><br><span class="line">      &lt;hello-world message=&quot;msg&quot;&gt;&lt;/hello-world&gt;</span><br><span class="line">    &lt;/teleport&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="多个teleport"><a href="#多个teleport" class="headerlink" title="多个teleport"></a>多个teleport</h2><p>如果将多个teleport应用到同一个目标上，那么这个目标会进行合并。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;teleport to=&quot;#myid&quot;&gt;</span><br><span class="line">    &lt;h2&gt;title&lt;/h2&gt;</span><br><span class="line">  &lt;/teleport&gt;</span><br><span class="line">  &lt;teleport to=&quot;#myid&quot;&gt;</span><br><span class="line">    &lt;hello-world message=&quot;hello, world&quot;&gt;&lt;/hello-world&gt;</span><br><span class="line">  &lt;/teleport&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h1 id="异步组件"><a href="#异步组件" class="headerlink" title="异步组件"></a>异步组件</h1><p>Suspense是一个内置的全局组件，有两个插槽：</p>
+<ul>
+<li>default：如果可以显示，那么显示default的内容</li>
+<li>fallback：如果default无法显示，显示fallback插槽的内容</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;suspense&gt;</span><br><span class="line">  &lt;template #default&gt;</span><br><span class="line">    &lt;async-home&gt;&lt;/async-home&gt;</span><br><span class="line">  &lt;/template&gt;</span><br><span class="line">  &lt;template #fallback&gt;</span><br><span class="line">    &lt;loading /&gt;</span><br><span class="line">  &lt;/template&gt;</span><br><span class="line">&lt;/suspense&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：目前Suspense是一个实验性的特性。</strong></p>
+<h1 id="Vue插件"><a href="#Vue插件" class="headerlink" title="Vue插件"></a>Vue插件</h1><p>通常向Vue全局添加一些功能时，会采用插件的模式，有两种编写方式：</p>
+<ul>
+<li>对象类型：一个对象，但必须包含一个install函数，该函数会在安装插件时执行</li>
+<li>函数类型：一个function，这个函数会在安装插件时自动执行</li>
+</ul>
+<p>对象类型：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;lucy&quot;</span>,</span><br><span class="line">  <span class="title function_">install</span>(<span class="params">app, options</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;插件被安装：&quot;</span>, app, options);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">name</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>函数类型：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span>(<span class="params">app, options</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;插件被安装：&quot;</span>, app, options);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在main.js中通过app.use来使用插件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app = <span class="title function_">createApp</span>(<span class="title class_">App</span>);</span><br><span class="line">app.<span class="title function_">use</span>(plugin);</span><br><span class="line">app.<span class="title function_">mount</span>(<span class="string">&#x27;#app&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h1 id="h函数"><a href="#h函数" class="headerlink" title="h函数"></a>h函数</h1><h2 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h2><p>如果在某些场景下需要JavaScript的完全编程能力，这时可以使用渲染函数，它比模板更接近编译器。</p>
+<p>Vue在生成真实的DOM之前，会将节点转换成VNode，而VNode组合在一起形成一颗树结构，就是虚拟DOM（VDOM）。</p>
+<p>h函数是一个用来创建vnode的函数，它接收三个参数：</p>
+<ul>
+<li>tag：标签名，可以是HTML标签名或组件，必需</li>
+<li>props：与attribute、prop和事件相对应的对象</li>
+<li>children：子VNodes，使用h()构建</li>
+</ul>
+<h2 id="基本使用-1"><a href="#基本使用-1" class="headerlink" title="基本使用"></a>基本使用</h2><p>h函数可以在两个地方使用：</p>
+<ul>
+<li>render函数选项中</li>
+<li>setup函数选项中</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; h &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">h</span>(<span class="string">&#x27;div&#x27;</span>, &#123; <span class="attr">class</span>: <span class="string">&#x27;app&#x27;</span> &#125;, <span class="string">&#x27;Hello App&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setup</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="title function_">h</span>(<span class="string">&#x27;div&#x27;</span>, &#123; <span class="attr">class</span>: <span class="string">&#x27;app&#x27;</span> &#125;, <span class="string">&#x27;Hello App&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="计数器案例"><a href="#计数器案例" class="headerlink" title="计数器案例"></a>计数器案例</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">data</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">counter</span>: <span class="number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br><span class="line"><span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">h</span>(</span><br><span class="line">    <span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    &#123; <span class="attr">class</span>: <span class="string">&#x27;app&#x27;</span> &#125;,</span><br><span class="line">    [</span><br><span class="line">      <span class="title function_">h</span>(<span class="string">&#x27;h2&#x27;</span>, <span class="literal">null</span>, <span class="string">`当前计数：<span class="subst">$&#123;<span class="variable language_">this</span>.counter&#125;</span>`</span>),</span><br><span class="line">      <span class="title function_">h</span>(<span class="string">&#x27;button&#x27;</span>, &#123;</span><br><span class="line">        <span class="attr">onClick</span>: <span class="function">() =&gt;</span> <span class="variable language_">this</span>.<span class="property">counter</span>++</span><br><span class="line">      &#125;, <span class="string">&#x27;+1&#x27;</span>),</span><br><span class="line">      <span class="title function_">h</span>(<span class="string">&#x27;button&#x27;</span>, &#123;</span><br><span class="line">        <span class="attr">onClick</span>: <span class="function">() =&gt;</span> <span class="variable language_">this</span>.<span class="property">counter</span>--</span><br><span class="line">      &#125;, <span class="string">&#x27;-1&#x27;</span>),</span><br><span class="line">    ]</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="Vue过渡动画"><a href="#Vue过渡动画" class="headerlink" title="Vue过渡动画"></a>Vue过渡动画</h1><h2 id="基本使用-2"><a href="#基本使用-2" class="headerlink" title="基本使用"></a>基本使用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">import &#123; ref &#125; from &#x27;vue&#x27;;</span><br><span class="line"></span><br><span class="line">const isShow = ref(true);</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class=&quot;app&quot;&gt;</span><br><span class="line">    &lt;button @click=&quot;isShow = !isShow&quot;&gt;切换&lt;/button&gt;</span><br><span class="line">    &lt;transition&gt;</span><br><span class="line">      &lt;h2 v-if=&quot;isShow&quot;&gt;哈哈哈&lt;/h2&gt;</span><br><span class="line">    &lt;/transition&gt;</span><br><span class="line">    </span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">  .v-enter-from,</span><br><span class="line">  .v-leave-to &#123;</span><br><span class="line">    opacity: 0;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  .v-enter-to,</span><br><span class="line">  .v-leave-from &#123;</span><br><span class="line">    opacity: 1;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  .v-enter-active,</span><br><span class="line">  .v-leave-active &#123;</span><br><span class="line">    transition: all 2s ease;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Vue的transition动画"><a href="#Vue的transition动画" class="headerlink" title="Vue的transition动画"></a>Vue的transition动画</h2><p>Vue提供了transition的封装组件，在以下情形中可以给任何元素和组件添加进入&#x2F;离开过渡：</p>
+<ul>
+<li>条件渲染</li>
+<li>动态组件</li>
+<li>组件根节点</li>
+</ul>
+<p>当插入或删除包含在transition组件中的元素时，Vue将会做如下处理：</p>
+<ul>
+<li>自动嗅探目标元素是否应用了CSS过渡或动画，如果有，在恰当的时机添加&#x2F;删除CSS类名</li>
+<li>如果transition组件提供了JS钩子函数，这些钩子函数将在恰当的时机被调用</li>
+<li>如果没有找到JS钩子并且也没有检测到CSS过渡&#x2F;动画，DOM插入、删除操作会立即执行</li>
+</ul>
+<h2 id="过渡动画class"><a href="#过渡动画class" class="headerlink" title="过渡动画class"></a>过渡动画class</h2><ul>
+<li>v-enter-from：定义进入过渡的开始状态</li>
+<li>v-enter-active：定义进入过渡生效时的状态</li>
+<li>v-enter-to：定义进入过渡的结束状态</li>
+<li>v-leave-from：定义离开过渡的开始状态</li>
+<li>v-leave-active：定义离开过渡生效时的状态</li>
+<li>v-leave-to：离开过渡的结束状态</li>
+</ul>
+<p>class命名规则：<br>默认以v-作为前缀，如果transition有name属性，会以name的值作为前缀。</p>
+<h2 id="同时设置过渡和动画"><a href="#同时设置过渡和动画" class="headerlink" title="同时设置过渡和动画"></a>同时设置过渡和动画</h2><p>如果同时使用过渡和动画，并且某一个动画执行结束时，另一个动画还没有结束，可以设置type属性为animation或transition来明确监听的类型。</p>
+<p>也可以通过duration属性显示指定过渡时间。<br>duration可以设置两种类型的值：</p>
+<ul>
+<li>number类型：同时设置进入和离开的过渡时间</li>
+<li>object类型：分别设置进入和离开的过渡时间</li>
+</ul>
+<h2 id="过渡模式"><a href="#过渡模式" class="headerlink" title="过渡模式"></a>过渡模式</h2><p>如果不希望同时执行进入和离开动画，需要设置transition的过渡模式：</p>
+<ul>
+<li>in-out：新元素先进行过渡，完成之后当前元素过渡离开</li>
+<li>out-in：当前元素先进性过渡，完成之后新元素过渡进入</li>
+</ul>
+<p>如果希望渲染一个列表，并且该列表中添加删除数据也希望有动画，要使用<transition-group>组件来完成。</p>
+<ul>
+<li>默认情况下，它不会渲染一个元素的包裹器，但可以指定一个元素并以tag attribute进行渲染</li>
+<li>过渡模式不可用</li>
+<li>内部元素需要提供唯一的key attribute</li>
+<li>CSS过渡的类将会应用在元素内部，而不是这个组本身</li>
+</ul>
+<p>在列表过渡的移动动画中，新增或删除有动画，但其他需要移动的节点没有动画。可以通过v-move来完成动画，它会在元素改变位置的过程中应用。</p>
+<h1 id="Vue响应式原理"><a href="#Vue响应式原理" class="headerlink" title="Vue响应式原理"></a>Vue响应式原理</h1><p>vue2原理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Depend</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">reactiveFns</span> = []</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">addDepend</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (fn) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">reactiveFns</span>.<span class="title function_">push</span>(fn);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">notify</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">reactiveFns</span>.<span class="title function_">forEach</span>(<span class="function"><span class="params">fn</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">fn</span>()</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj = <span class="title function_">reactive</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;why&quot;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">18</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> reactiveFn = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">watchFn</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">  reactiveFn = fn;</span><br><span class="line">  <span class="title function_">fn</span>();</span><br><span class="line">  reactiveFn = <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> objMap = <span class="keyword">new</span> <span class="title class_">WeakMap</span>()</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getDepend</span>(<span class="params">obj, key</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> map = objMap.<span class="title function_">get</span>(obj)</span><br><span class="line">  <span class="keyword">if</span> (!map) &#123;</span><br><span class="line">    map = <span class="keyword">new</span> <span class="title class_">Map</span>();</span><br><span class="line">    objMap.<span class="title function_">set</span>(obj, map);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> dep = map.<span class="title function_">get</span>(key);</span><br><span class="line">  <span class="keyword">if</span> (!dep) &#123;</span><br><span class="line">    dep = <span class="keyword">new</span> <span class="title class_">Depend</span>()</span><br><span class="line">    map.<span class="title function_">set</span>(key, dep)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> dep;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">reactive</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">  <span class="title class_">Object</span>.<span class="title function_">keys</span>(obj).<span class="title function_">forEach</span>(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> value = obj[key];</span><br><span class="line"></span><br><span class="line">    <span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(obj, key, &#123;</span><br><span class="line">      <span class="attr">set</span>: <span class="keyword">function</span> (<span class="params">newValue</span>) &#123;</span><br><span class="line">        value = newValue;</span><br><span class="line">        <span class="keyword">const</span> dep = <span class="title function_">getDepend</span>(obj, key)</span><br><span class="line">        dep.<span class="title function_">notify</span>()</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">get</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> dep = <span class="title function_">getDepend</span>(obj, key);</span><br><span class="line">        dep.<span class="title function_">addDepend</span>(reactiveFn);</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">watchFn</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">name</span>)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;function 01&quot;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="title function_">watchFn</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">age</span>)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;function 02&quot;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;---name发生改变-----&quot;</span>)</span><br><span class="line">obj.<span class="property">name</span> = <span class="string">&quot;01&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;---age发生改变-----&quot;</span>)</span><br><span class="line">obj.<span class="property">age</span> = <span class="number">12</span>;</span><br></pre></td></tr></table></figure>
+
+<p>vue3：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">reactive</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> objProxy = <span class="keyword">new</span> <span class="title class_">Proxy</span>(obj, &#123;</span><br><span class="line">    <span class="attr">set</span>: <span class="keyword">function</span>(<span class="params">target, key, newValue, receiver</span>) &#123;</span><br><span class="line">      <span class="title class_">Reflect</span>.<span class="title function_">set</span>(target, key, newValue, receiver);</span><br><span class="line">      <span class="keyword">const</span> dep = <span class="title function_">getDepend</span>(target, key);</span><br><span class="line">      dep.<span class="title function_">notify</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">get</span>: <span class="keyword">function</span>(<span class="params">target, key, receiver</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> dep = <span class="title function_">getDepend</span>(target, key);</span><br><span class="line">      dep.<span class="title function_">depend</span>();</span><br><span class="line">      <span class="keyword">return</span> target[key];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> objProxy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+   
+     <div>
+       <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+     </div>
+   
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/30/js/18_JavaScript%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="prev" title="网络编程">
+      <i class="fa fa-chevron-left"></i> 网络编程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10/02/js/19_JavaScript%E6%A8%A1%E5%9D%97%E5%8C%96/" rel="next" title="JavaScript模块化">
+      JavaScript模块化 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81ODI4OS8zNDc1Mg=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">自定义指令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4"><span class="nav-number">1.2.</span> <span class="nav-text">局部自定义指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4"><span class="nav-number">1.3.</span> <span class="nav-text">全局自定义指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.4.</span> <span class="nav-text">指令的生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E7%9A%84%E5%8F%82%E6%95%B0%E5%92%8C%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="nav-number">1.5.</span> <span class="nav-text">指令的参数和修饰符</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Teleport"><span class="nav-number">2.</span> <span class="nav-text">Teleport</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%92%8C%E7%BB%84%E4%BB%B6%E7%BB%93%E5%90%88%E4%BD%BF%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">和组件结合使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AAteleport"><span class="nav-number">2.3.</span> <span class="nav-text">多个teleport</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">异步组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vue%E6%8F%92%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">Vue插件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#h%E5%87%BD%E6%95%B0"><span class="nav-number">5.</span> <span class="nav-text">h函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0-1"><span class="nav-number">5.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8-1"><span class="nav-number">5.2.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E6%95%B0%E5%99%A8%E6%A1%88%E4%BE%8B"><span class="nav-number">5.3.</span> <span class="nav-text">计数器案例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vue%E8%BF%87%E6%B8%A1%E5%8A%A8%E7%94%BB"><span class="nav-number">6.</span> <span class="nav-text">Vue过渡动画</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8-2"><span class="nav-number">6.1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue%E7%9A%84transition%E5%8A%A8%E7%94%BB"><span class="nav-number">6.2.</span> <span class="nav-text">Vue的transition动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%B8%A1%E5%8A%A8%E7%94%BBclass"><span class="nav-number">6.3.</span> <span class="nav-text">过渡动画class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%97%B6%E8%AE%BE%E7%BD%AE%E8%BF%87%E6%B8%A1%E5%92%8C%E5%8A%A8%E7%94%BB"><span class="nav-number">6.4.</span> <span class="nav-text">同时设置过渡和动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%B8%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.5.</span> <span class="nav-text">过渡模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vue%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86"><span class="nav-number">7.</span> <span class="nav-text">Vue响应式原理</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="学徒"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">学徒</p>
+  <div class="site-description" itemprop="description">千里之行，始于足下</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; Sun Mar 26 2023 08:00:00 GMT+0800 (中国标准时间) – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">学徒</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">292k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:26</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
